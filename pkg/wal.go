@@ -18,6 +18,12 @@ type WriteAheadLog struct {
 	scanner *bufio.Scanner
 }
 
+// Represents a single entry in a WriteAheadLog file.
+type WALEntry struct {
+	key string
+	value string
+}
+
 // Assumes key and value have no newlines in them.
 func (wal *WriteAheadLog) AppendLog(key string, value string) error {
 	message := fmt.Sprintf("%s\n%s\n", key, value)
@@ -42,18 +48,18 @@ func (wal *WriteAheadLog) AppendLog(key string, value string) error {
 }
 
 // Reads the next Key-Value pair from the log.
-func (wal *WriteAheadLog) ReadNextEntry() (string, string, error) {
+func (wal *WriteAheadLog) ReadNextEntry() (WALEntry, error) {
 	if !wal.scanner.Scan() {
 		err := wal.scanner.Err()
-		return "", "", err
+		return WALEntry{}, err
 	}
 	key := wal.scanner.Text()
 	if !wal.scanner.Scan() {
 		err := wal.scanner.Err()
-		return "", "", err
+		return WALEntry{}, err
 	}
 	value := wal.scanner.Text()
-	return key, value, nil
+	return WALEntry{key, value}, nil
 }
 
 // Open an existing WriteAheadLog, given a path to the file itself.

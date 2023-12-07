@@ -28,14 +28,14 @@ func (kvs *KVStore) Put(key string, value string) error {
 // Recreates a KVStore by successively applying each command in the log.
 func (kvs *KVStore) ApplyLog(wal *WriteAheadLog) error {
 	for {
-		key, value, err := wal.ReadNextEntry()
+		entry, err := wal.ReadNextEntry()
 		if err != nil {
 			return err
 		}
-		if err == nil && key == "" && value == "" {
+		if err == nil && entry.key == "" && entry.value == "" {
 			return nil
 		}
-		kvs.data[key] = value
+		kvs.data[entry.key] = entry.value
 	}
 }
 
