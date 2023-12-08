@@ -62,6 +62,10 @@ func (wal *WriteAheadLog) ReadNextEntry() (WALEntry, error) {
 	return WALEntry{key, value}, nil
 }
 
+func (wal *WriteAheadLog) Close() error {
+	return wal.fd.Close()
+}
+
 // Open an existing WriteAheadLog, given a path to the file itself.
 func OpenWriteAheadLog(underlying_file_path string) (*WriteAheadLog, error) {
 	wal := WriteAheadLog{}

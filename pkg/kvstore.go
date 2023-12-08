@@ -39,6 +39,10 @@ func (kvs *KVStore) ApplyLog(wal *WriteAheadLog) error {
 	}
 }
 
+func (kvs *KVStore) Close() error {
+	return kvs.Wal.Close()
+}
+
 // Recreates a KVStore from a WriteAheadLog file.
 func RecreateKVStore(wal_file string) (*KVStore, error) {
 	kvs := KVStore{}
