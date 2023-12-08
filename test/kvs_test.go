@@ -16,6 +16,7 @@ func TestKVStore(t *testing.T) {
 	if err != nil {
 		log.Panic(err)
 	}
+	defer kvs.Close()
 	kvs.Put("hey", "hi")
 	kvs.Put("yo", "hey")
 	kvs.Put("log", "stuff")
@@ -26,6 +27,7 @@ func TestKVStore(t *testing.T) {
 	if err != nil {
 		log.Panic(err)
 	}
+	defer kvs.Close()
 	assert.NotEqual(t, kvs.Get("yo"), "hey")
 	assert.Equal(t, kvs.Get("yo"), "hi")
 	err = os.Remove(kvs.Wal.Underlying_file_path)
